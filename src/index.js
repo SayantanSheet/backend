@@ -7,6 +7,9 @@ const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 3002;
 const url = process.env.PUBLIC_MONGO_URL;
+if (!url) {
+  throw new Error("PUBLIC_MONGO_URL environment variable is not defined");
+}
 
 const { HoldingsModel } = require('./model/HoldingsModel');
 const { PositionsModel } = require('./model/PositionsModel');
@@ -190,7 +193,7 @@ app.use(cookieParser());
 // })
 
 app.listen(PORT, async () => {
-  // console.log(url);
+  console.log(url);
 
   console.log(`Server running on port ${PORT}`);
   await mongoose.connect(url)
