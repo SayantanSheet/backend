@@ -6,7 +6,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const PORT=process.env.PORT || 3002;
-const url=process.env.MONGO_URL;
+const url=process.env.PUBLIC_MONGO_URL;
 
 const {HoldingsModel}=require('./model/HoldingsModel');
 const {PositionsModel}=require('./model/PositionsModel');
@@ -190,7 +190,9 @@ app.use(cookieParser());
 // })
 
 app.listen(PORT, ()=>{
-  console.log('Server running on port ${PORT}');
+  // console.log(url);
+  
+  console.log(`Server running on port ${PORT}`);
   mongoose.connect(url);
   console.log("DB connect")
 });
