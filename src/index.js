@@ -193,7 +193,7 @@ app.use(cookieParser());
 // })
 
 app.listen(PORT, async () => {
-  console.log(url);
+  // console.log(url);
 
   console.log(`Server running on port ${PORT}`);
   await mongoose.connect(url)
