@@ -1,19 +1,19 @@
 require("dotenv").config();
-const cors=require("cors");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const express = require('express');
 const mongoose = require('mongoose');
 
-const PORT=process.env.PORT || 3002;
-const url=process.env.PUBLIC_MONGO_URL;
+const PORT = process.env.PORT || 3002;
+const url = process.env.PUBLIC_MONGO_URL;
 
-const {HoldingsModel}=require('./model/HoldingsModel');
-const {PositionsModel}=require('./model/PositionsModel');
-const {OrdersModel}=require('./model/OrdersModel');
-const {WatchlistModel}=require('./model/WatchlistModel');
-const {SignUp}= require('./utility/AuthController');
-const {LogIn} = require('./utility/AuthController');
+const { HoldingsModel } = require('./model/HoldingsModel');
+const { PositionsModel } = require('./model/PositionsModel');
+const { OrdersModel } = require('./model/OrdersModel');
+const { WatchlistModel } = require('./model/WatchlistModel');
+const { SignUp } = require('./utility/AuthController');
+const { LogIn } = require('./utility/AuthController');
 
 const app = express();
 
@@ -189,40 +189,44 @@ app.use(cookieParser());
 //     res.send("Positions added successfully");
 // })
 
-app.listen(PORT, ()=>{
+app.listen(PORT, async () => {
   // console.log(url);
-  
+
   console.log(`Server running on port ${PORT}`);
-  mongoose.connect(url);
+  await mongoose.connect(url)
+    .catch(err => {
+      console.log("server error: " + err);
+
+    })
   console.log("DB connect")
 });
 //FOR DATA FETCH FORM DATABASE
-app.get("/allHoldings",async(req,res)=>{
-    let allHoldings = await HoldingsModel.find({});
-    res.json(allHoldings);
+app.get("/allHoldings", async (req, res) => {
+  let allHoldings = await HoldingsModel.find({});
+  res.json(allHoldings);
 });
 
-app.get("/allPositions",async(req,res)=>{
-    let allPositions = await PositionsModel.find({});
-    res.json(allPositions);
+app.get("/allPositions", async (req, res) => {
+  let allPositions = await PositionsModel.find({});
+  res.json(allPositions);
 });
 
-app.get('/watchlist', async(req, res)=>{
+app.get('/watchlist', async (req, res) => {
   let watchlistData = await WatchlistModel.find({});
   res.json(watchlistData);
 })
 
 //saving newOrder data to DB from dashboard
-app.post("/newOrder",async(req,res)=>{
-    let newOrder = new OrdersModel({
-        name: req.body.name,
-        qty: req.body.qty,
-        price: req.body.price,
-        mode: req.body.mode,
-    });
-    newOrder.save();
-    res.send("New order added successfully");
-    console.log("newOrder data",req.body);
+app.post("/newOrder", async (req, res) => {
+  let newOrder = new OrdersModel({
+    name: req.body.name,
+    qty: req.body.qty,
+    price: req.body.price,
+    mode: req.body.mode,
+  });
+  newOrder.save();
+  res.send("New order added successfully");
+  console.log("newOrder data", req.body);
 })
 
 app.post("/signUp", SignUp);
